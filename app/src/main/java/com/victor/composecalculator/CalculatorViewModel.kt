@@ -25,7 +25,8 @@ class CalculatorViewModel: ViewModel() {
             is UiEvent.AddOperation -> {}
             is UiEvent.CalculateOperation -> {}
             is UiEvent.TypeNumber -> {
-                _currentNumber.value += event.number
+                if (_currentNumber.value.isNotEmpty() || event.number != 0)
+                    _currentNumber.value += event.number
             }
         }
     }

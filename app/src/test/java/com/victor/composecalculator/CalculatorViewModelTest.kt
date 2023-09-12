@@ -26,7 +26,7 @@ class CalculatorViewModelTest {
     }
 
     @Test
-    fun `Given a user type many numbers, the currentNumber should concatenate them` () {
+    fun `Given a user type many numbers, the currentNumber should concatenate them`() {
         for (i in 1..5) {
             viewModel = CalculatorViewModel()
             val n = (1..5).random()
@@ -38,5 +38,13 @@ class CalculatorViewModelTest {
             }
             assertThat(viewModel.currentNumber.value).isEqualTo(currentNumber)
         }
+    }
+
+    @Test
+    fun `Given user type 0 as first number, currentNumber should stay unchanged`() {
+        val valueBefore = viewModel.currentNumber.value
+        viewModel.onEvent(UiEvent.TypeNumber(0))
+
+        assertThat(viewModel.currentNumber.value).isEqualTo(valueBefore)
     }
 }
