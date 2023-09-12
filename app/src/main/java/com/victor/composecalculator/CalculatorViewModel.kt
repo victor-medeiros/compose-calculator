@@ -7,8 +7,8 @@ import kotlinx.coroutines.flow.StateFlow
 
 class CalculatorViewModel: ViewModel() {
 
-    private val _currentNumber = MutableStateFlow(0)
-    val currentNumber: StateFlow<Number> = _currentNumber
+    private val _currentNumber = MutableStateFlow("")
+    val currentNumber: StateFlow<String> = _currentNumber
 
     private val _numbers = MutableStateFlow(emptyList<Number>())
     val numbers: StateFlow<List<Number>> = _numbers
@@ -21,10 +21,12 @@ class CalculatorViewModel: ViewModel() {
 
     fun onEvent(event: UiEvent) {
         when (event) {
-            is UiEvent.AddDecimalCharacter -> TODO()
-            is UiEvent.AddOperation -> TODO()
-            is UiEvent.CalculateOperation -> TODO()
-            is UiEvent.TypeNumber -> TODO()
+            is UiEvent.AddDecimalCharacter -> {}
+            is UiEvent.AddOperation -> {}
+            is UiEvent.CalculateOperation -> {}
+            is UiEvent.TypeNumber -> {
+                _currentNumber.value += event.number
+            }
         }
     }
 }
