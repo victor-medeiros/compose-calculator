@@ -47,4 +47,42 @@ class CalculatorViewModelTest {
 
         assertThat(viewModel.currentNumber.value).isEqualTo(valueBefore)
     }
+
+    @Test
+    fun `Given user adds decimal character, then currentNumber should contain dot`() {
+        for (i in 0 until 10) {
+            viewModel = CalculatorViewModel()
+            val num = (0..9).random()
+            var currentNumber = "$num."
+            viewModel.onEvent((UiEvent.TypeNumber(num)))
+            viewModel.onEvent((UiEvent.AddDecimalCharacter))
+
+            for (j in 0 until i) {
+                val n = (0..9).random()
+                currentNumber += n
+                viewModel.onEvent((UiEvent.TypeNumber(n)))
+
+            }
+            assertThat(viewModel.currentNumber.value).isEqualTo(currentNumber)
+        }
+    }
+
+    @Test
+    fun `Given user adds decimal character more than once, they should not be added`() {
+        for (i in 1..5) {
+            viewModel = CalculatorViewModel()
+            val num = (0..9).random()
+            var currentNumber = "$num."
+            viewModel.onEvent((UiEvent.TypeNumber(num)))
+            viewModel.onEvent((UiEvent.AddDecimalCharacter))
+
+            for (j in 0 until i) {
+                viewModel.onEvent((UiEvent.AddDecimalCharacter))
+                val n = (0..9).random()
+                viewModel.onEvent((UiEvent.TypeNumber(n)))
+                currentNumber += n
+            }
+            assertThat(viewModel.currentNumber.value).isEqualTo(currentNumber)
+        }
+    }
 }

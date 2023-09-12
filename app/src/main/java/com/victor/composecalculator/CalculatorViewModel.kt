@@ -21,7 +21,11 @@ class CalculatorViewModel: ViewModel() {
 
     fun onEvent(event: UiEvent) {
         when (event) {
-            is UiEvent.AddDecimalCharacter -> {}
+            is UiEvent.AddDecimalCharacter -> {
+                if (!_currentNumber.value.contains(".")) {
+                    _currentNumber.value += "."
+                }
+            }
             is UiEvent.AddOperation -> {}
             is UiEvent.CalculateOperation -> {}
             is UiEvent.TypeNumber -> {
