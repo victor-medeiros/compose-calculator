@@ -10,14 +10,14 @@ class CalculatorViewModel: ViewModel() {
     private val _currentNumber = MutableStateFlow("")
     val currentNumber: StateFlow<String> = _currentNumber
 
-    private val _numbers = MutableStateFlow(emptyList<Number>())
-    val numbers: StateFlow<List<Number>> = _numbers
+    private val _numbers = MutableStateFlow(emptyList<Double>())
+    val numbers: StateFlow<List<Double>> = _numbers
 
     private val _operations = MutableStateFlow(emptyList<String>())
     val operations: StateFlow<List<String>> = _operations
 
-    private val _result = MutableStateFlow(0)
-    val result: StateFlow<Number> = _result
+    private val _result = MutableStateFlow(0.0)
+    val result: StateFlow<Double> = _result
 
     fun onEvent(event: UiEvent) {
         when (event) {
@@ -29,7 +29,7 @@ class CalculatorViewModel: ViewModel() {
             is UiEvent.AddOperation -> {}
             is UiEvent.CalculateOperation -> {}
             is UiEvent.TypeNumber -> {
-                if (_currentNumber.value.isNotEmpty() || event.number != 0)
+                if (_currentNumber.value.isNotEmpty() || event.number != 0.0)
                     _currentNumber.value += event.number
             }
         }
