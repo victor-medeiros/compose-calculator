@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 class CalculatorViewModel: ViewModel() {
 
-    private val _currentNumber = MutableStateFlow("")
+    private val _currentNumber = MutableStateFlow("0")
     val currentNumber: StateFlow<String> = _currentNumber
 
     private val _numbers = MutableStateFlow(emptyList<Double>())
@@ -29,8 +29,11 @@ class CalculatorViewModel: ViewModel() {
             is UiEvent.AddOperation -> {}
             is UiEvent.CalculateOperation -> {}
             is UiEvent.TypeNumber -> {
-                if (_currentNumber.value.isNotEmpty() || event.number != 0.0)
+                if (_currentNumber.value == "0") {
+                    _currentNumber.value = event.number.toString()
+                } else {
                     _currentNumber.value += event.number
+                }
             }
         }
     }

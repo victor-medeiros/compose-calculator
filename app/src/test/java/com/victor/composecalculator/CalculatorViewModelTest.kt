@@ -3,9 +3,9 @@ package com.victor.composecalculator
 import com.google.common.truth.Truth.assertThat
 import com.victor.composecalculator.model.Operation
 import com.victor.composecalculator.model.UiEvent
+import com.victor.composecalculator.model.extension.addDecimal
 import org.junit.Before
 import org.junit.Test
-import kotlin.random.Random
 
 
 class CalculatorViewModelTest {
@@ -19,11 +19,10 @@ class CalculatorViewModelTest {
 
     @Test
     fun `Given user type a number, then currentNumber should be set to it`() {
-        for (i in 1..10) {
+        for (i in 0..9) {
             viewModel = CalculatorViewModel()
-            val num = (0..9).random()
-            viewModel.onEvent(UiEvent.TypeNumber(num.toDouble()))
-            assertThat(viewModel.currentNumber.value).isEqualTo(num.toString())
+            viewModel.onEvent(UiEvent.TypeNumber(i))
+            assertThat(viewModel.currentNumber.value).isEqualTo(i.toString())
         }
     }
 
@@ -35,7 +34,7 @@ class CalculatorViewModelTest {
             var currentNumber = ""
             for (j in 0 until n) {
                 val num = (0..9).random()
-                viewModel.onEvent(UiEvent.TypeNumber(num.toDouble()))
+                viewModel.onEvent(UiEvent.TypeNumber(num))
                 currentNumber += num
             }
             assertThat(viewModel.currentNumber.value).isEqualTo(currentNumber)
@@ -45,24 +44,23 @@ class CalculatorViewModelTest {
     @Test
     fun `Given user type 0 as first number, currentNumber should stay unchanged`() {
         val valueBefore = viewModel.currentNumber.value
-        viewModel.onEvent(UiEvent.TypeNumber(0.0))
+        viewModel.onEvent(UiEvent.TypeNumber(0))
 
         assertThat(viewModel.currentNumber.value).isEqualTo(valueBefore)
     }
 
     @Test
     fun `Given user adds decimal character, then currentNumber should contain dot`() {
-        for (i in 0 until 10) {
+        for (i in 0..9) {
             viewModel = CalculatorViewModel()
-            val num = (0..9).random()
-            var currentNumber = "$num."
-            viewModel.onEvent((UiEvent.TypeNumber(num.toDouble())))
+            var currentNumber = "$i."
+            viewModel.onEvent((UiEvent.TypeNumber(i)))
             viewModel.onEvent((UiEvent.AddDecimalCharacter))
 
             for (j in 0 until i) {
                 val n = (0..9).random()
                 currentNumber += n
-                viewModel.onEvent((UiEvent.TypeNumber(n.toDouble())))
+                viewModel.onEvent((UiEvent.TypeNumber(n)))
 
             }
             assertThat(viewModel.currentNumber.value).isEqualTo(currentNumber)
@@ -75,13 +73,13 @@ class CalculatorViewModelTest {
             viewModel = CalculatorViewModel()
             val num = (0..9).random()
             var currentNumber = "$num."
-            viewModel.onEvent((UiEvent.TypeNumber(num.toDouble())))
+            viewModel.onEvent((UiEvent.TypeNumber(num)))
             viewModel.onEvent((UiEvent.AddDecimalCharacter))
 
             for (j in 0 until i) {
                 viewModel.onEvent((UiEvent.AddDecimalCharacter))
                 val n = (0..9).random()
-                viewModel.onEvent((UiEvent.TypeNumber(n.toDouble())))
+                viewModel.onEvent((UiEvent.TypeNumber(n)))
                 currentNumber += n
             }
             assertThat(viewModel.currentNumber.value).isEqualTo(currentNumber)
@@ -90,104 +88,51 @@ class CalculatorViewModelTest {
 
     @Test
     fun `Given onEvent receives SUM event, then result should be the sum of the numbers typed`() {
-        for (i in 1..10) {
-            val numbers = mutableListOf<Double>()
-            val operations = mutableListOf<String>()
-
-            val num = Random.nextDouble(0.0, 1000.0)
-            viewModel.onEvent((UiEvent.TypeNumber(num)))
-            numbers.add(num)
-
-            for (j in 0 until i) {
-                viewModel.onEvent(UiEvent.AddOperation(Operation.SUM))
-                operations.add(Operation.MULTIPLICATION.symbol)
-
-                val n = Random.nextDouble(0.0, 1000.0)
-                viewModel.onEvent((UiEvent.TypeNumber(n)))
-                numbers.add(n)
-            }
-            viewModel.onEvent(UiEvent.CalculateOperation)
-
-            assertThat(viewModel.numbers.value).isEqualTo(numbers)
-            assertThat(viewModel.operations.value).isEqualTo(operations)
-            assertThat(viewModel.result.value).isEqualTo(numbers.sum())
-        }
+        chainedOperation(Operation.SUM) { acc, n -> acc + n }
     }
 
     @Test
     fun `Given onEvent receives SUBTRACTION event, then result should be the subtraction of the numbers typed`() {
-        for (i in 1..10) {
-            val numbers = mutableListOf<Double>()
-            val operations = mutableListOf<String>()
-
-            val num = Random.nextDouble(0.0, 1000.0)
-            viewModel.onEvent((UiEvent.TypeNumber(num)))
-            numbers.add(num)
-
-            for (j in 0 until i) {
-                viewModel.onEvent(UiEvent.AddOperation(Operation.SUBTRACTION))
-                operations.add(Operation.MULTIPLICATION.symbol)
-
-                val n = Random.nextDouble(0.0, 1000.0)
-                viewModel.onEvent((UiEvent.TypeNumber(n)))
-                numbers.add(n)
-            }
-            viewModel.onEvent(UiEvent.CalculateOperation)
-            assertThat(viewModel.numbers.value).isEqualTo(numbers)
-            assertThat(viewModel.operations.value).isEqualTo(operations)
-            assertThat(viewModel.result.value).isEqualTo(numbers.reduce { acc, d -> acc - d })
-        }
+        chainedOperation(Operation.SUBTRACTION) { acc, n -> acc - n }
     }
 
     @Test
     fun `Given onEvent receives MULTIPLICATION event, then result should be the multiplication of the numbers typed`() {
-        for (i in 1..5) {
-            val numbers = mutableListOf<Double>()
-            val operations = mutableListOf<String>()
-
-            val num = Random.nextDouble(0.0, 10.0)
-            viewModel.onEvent((UiEvent.TypeNumber(num)))
-            numbers.add(num)
-
-            for (j in 0 until i) {
-                viewModel.onEvent(UiEvent.AddOperation(Operation.MULTIPLICATION))
-                operations.add(Operation.MULTIPLICATION.symbol)
-
-                val n = Random.nextDouble(0.0, 10.0)
-                viewModel.onEvent((UiEvent.TypeNumber(n)))
-                numbers.add(n)
-            }
-            viewModel.onEvent(UiEvent.CalculateOperation)
-
-            assertThat(viewModel.numbers.value).isEqualTo(numbers)
-            assertThat(viewModel.operations.value).isEqualTo(operations)
-            assertThat(viewModel.result.value).isEqualTo(numbers.reduce { acc, d -> acc * d })
-        }
+        chainedOperation(Operation.MULTIPLICATION) { acc, n -> acc * n }
     }
 
     @Test
     fun `Given onEvent receives DIVISION event, then result should be the division of the numbers typed`() {
+        chainedOperation(Operation.DIVISION) { acc, n -> acc / n }
+    }
+
+    private fun chainedOperation(operation: Operation, reduce: (Double, Double) -> Double) {
         for (i in 1..5) {
             val numbers = mutableListOf<Double>()
             val operations = mutableListOf<String>()
 
-            val num = Random.nextDouble(0.0, 10.0)
+            val num = (1..100).random()
             viewModel.onEvent((UiEvent.TypeNumber(num)))
-            numbers.add(num)
+            numbers.add(num.toDouble())
 
             for (j in 0 until i) {
-                viewModel.onEvent(UiEvent.AddOperation(Operation.DIVISION))
-                operations.add(Operation.MULTIPLICATION.symbol)
+                viewModel.onEvent(UiEvent.AddOperation(operation))
+                operations.add(operation.symbol)
 
-                val n = Random.nextDouble(0.0, 10.0)
-                viewModel.onEvent((UiEvent.TypeNumber(n)))
-                numbers.add(n)
+                // to have some variation of decimal and integer numbers
+                if (j % 2 == 0) {
+                    val n = (1..100).random()
+                    viewModel.onEvent((UiEvent.TypeNumber(n)))
+                    numbers.add(n.toDouble())
+                } else {
+                    numbers.add(viewModel.addDecimal())
+                }
             }
             viewModel.onEvent(UiEvent.CalculateOperation)
 
             assertThat(viewModel.numbers.value).isEqualTo(numbers)
             assertThat(viewModel.operations.value).isEqualTo(operations)
-            assertThat(viewModel.result.value).isEqualTo(numbers.reduce { acc, d -> acc / d })
+            assertThat(viewModel.result.value).isEqualTo(numbers.reduce(reduce))
         }
     }
 }
