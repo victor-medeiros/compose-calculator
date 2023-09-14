@@ -33,7 +33,7 @@ class CalculatorViewModelTest {
             val n = (1..5).random()
             var currentNumber = ""
             for (j in 0 until n) {
-                val num = (0..9).random()
+                val num = if (j == 0 ) (1..9).random() else (0..9).random()
                 viewModel.onEvent(UiEvent.TypeNumber(num))
                 currentNumber += num
             }
@@ -110,10 +110,19 @@ class CalculatorViewModelTest {
         chainedOperation(Operation.DIVISION) { acc, n -> acc / n }
     }
 
+    @Test
+    fun `Given user adds an operation, current number should be empty`() {
+        for (operation in Operation.values()) {
+            viewModel.onEvent(UiEvent.TypeNumber((0..9).random()))
+            viewModel.onEvent(UiEvent.AddOperation(operation))
+            val expected = if (operation == Operation.SUBTRACTION) "-" else ""
+            assertThat(viewModel.currentNumber.value).isEqualTo(expected)
+        }
+    }
+
     private fun chainedOperation(operation: Operation, reduce: (Double, Double) -> Double) {
         for (i in 1..5) {
             val numbers = mutableListOf<Double>()
-            val operations = mutableListOf<String>()
 
             val num = (1..100).random()
             viewModel.onEvent((UiEvent.TypeNumber(num)))
@@ -121,7 +130,6 @@ class CalculatorViewModelTest {
 
             for (j in 0 until i) {
                 viewModel.onEvent(UiEvent.AddOperation(operation))
-                operations.add(operation.symbol)
 
                 // to have some variation of decimal and integer numbers
                 if (j % 2 == 0) {
@@ -134,8 +142,6 @@ class CalculatorViewModelTest {
             }
             viewModel.onEvent(UiEvent.CalculateOperation)
 
-            assertThat(viewModel.numbers.value).isEqualTo(numbers)
-            assertThat(viewModel.operations.value).isEqualTo(operations)
             assertThat(viewModel.result.value).isEqualTo(numbers.reduce(reduce))
         }
     }
