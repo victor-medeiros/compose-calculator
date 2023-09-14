@@ -42,11 +42,15 @@ class CalculatorViewModelTest {
     }
 
     @Test
-    fun `Given user type 0 as first number, currentNumber should stay unchanged`() {
-        val valueBefore = viewModel.currentNumber.value
-        viewModel.onEvent(UiEvent.TypeNumber(0))
-
-        assertThat(viewModel.currentNumber.value).isEqualTo(valueBefore)
+    fun `Given user type left 0 without decimal character, they should be ignored`() {
+        for (i in 0..2) {
+            viewModel = CalculatorViewModel()
+            for (j in 0 until i) {
+                viewModel.onEvent(UiEvent.TypeNumber(0))
+            }
+            viewModel.onEvent(UiEvent.TypeNumber(i))
+            assertThat(viewModel.currentNumber.value).isEqualTo(i.toString())
+        }
     }
 
     @Test
