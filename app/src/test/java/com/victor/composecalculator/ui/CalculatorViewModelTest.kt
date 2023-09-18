@@ -120,6 +120,18 @@ class CalculatorViewModelTest {
         }
     }
 
+    @Test
+    fun `Giver user onEvent receives ClearExpression, the all the state should be cleared and restarted`() {
+        viewModel.onEvent(UiEvent.TypeNumber((1..9).random()))
+        viewModel.onEvent(UiEvent.AddOperation(Operation.values().random()))
+        viewModel.onEvent(UiEvent.TypeNumber((1..9).random()))
+        viewModel.onEvent(UiEvent.CalculateOperation)
+        viewModel.onEvent(UiEvent.TypeNumber((1..9).random()))
+        viewModel.onEvent(UiEvent.AddOperation(Operation.values().random()))
+        viewModel.onEvent(UiEvent.ClearExpression)
+        assertThat(viewModel.calculatorUiState.value).isEqualTo(CalculatorUiState())
+    }
+
     private fun chainedOperation(operation: Operation, reduce: (Double, Double) -> Double) {
         for (i in 1..5) {
             val numbers = mutableListOf<Double>()

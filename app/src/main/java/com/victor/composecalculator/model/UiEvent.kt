@@ -5,6 +5,7 @@ sealed class UiEvent {
     data class AddOperation(val operation: Operation): UiEvent()
     object AddDecimalCharacter: UiEvent()
     object CalculateOperation: UiEvent()
+    object ClearExpression: UiEvent()
 }
 
 enum class Operation(val symbol: String) {

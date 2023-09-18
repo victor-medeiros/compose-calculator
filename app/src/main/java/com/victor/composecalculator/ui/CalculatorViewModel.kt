@@ -66,6 +66,13 @@ class CalculatorViewModel : ViewModel() {
                     }
                 }
             }
+
+            UiEvent.ClearExpression -> {
+                _calculatorUiState.update { CalculatorUiState()}
+                currentNumber = ""
+                numbers.clear()
+                operations.clear()
+            }
         }
     }
 
