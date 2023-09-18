@@ -1,4 +1,4 @@
-package com.victor.composecalculator
+package com.victor.composecalculator.ui
 
 import com.google.common.truth.Truth.assertThat
 import com.victor.composecalculator.model.Operation
@@ -18,11 +18,11 @@ class CalculatorViewModelTest {
     }
 
     @Test
-    fun `Given user type a number, then currentNumber should be set to it`() {
+    fun `Given user type a number, then expression should be set to it`() {
         for (i in 0..9) {
             viewModel = CalculatorViewModel()
             viewModel.onEvent(UiEvent.TypeNumber(i))
-            assertThat(viewModel.currentNumber.value).isEqualTo(i.toString())
+            assertThat(viewModel.calculatorUiState.value.expression).isEqualTo(i.toString())
         }
     }
 
@@ -37,7 +37,7 @@ class CalculatorViewModelTest {
                 viewModel.onEvent(UiEvent.TypeNumber(num))
                 currentNumber += num
             }
-            assertThat(viewModel.currentNumber.value).isEqualTo(currentNumber)
+            assertThat(viewModel.calculatorUiState.value.expression).isEqualTo(currentNumber)
         }
     }
 
@@ -49,7 +49,7 @@ class CalculatorViewModelTest {
                 viewModel.onEvent(UiEvent.TypeNumber(0))
             }
             viewModel.onEvent(UiEvent.TypeNumber(i))
-            assertThat(viewModel.currentNumber.value).isEqualTo(i.toString())
+            assertThat(viewModel.calculatorUiState.value.expression).isEqualTo(i.toString())
         }
     }
 
@@ -67,7 +67,7 @@ class CalculatorViewModelTest {
                 viewModel.onEvent((UiEvent.TypeNumber(n)))
 
             }
-            assertThat(viewModel.currentNumber.value).isEqualTo(currentNumber)
+            assertThat(viewModel.calculatorUiState.value.expression).isEqualTo(currentNumber)
         }
     }
 
@@ -86,7 +86,7 @@ class CalculatorViewModelTest {
                 viewModel.onEvent((UiEvent.TypeNumber(n)))
                 currentNumber += n
             }
-            assertThat(viewModel.currentNumber.value).isEqualTo(currentNumber)
+            assertThat(viewModel.calculatorUiState.value.expression).isEqualTo(currentNumber)
         }
     }
 
@@ -111,12 +111,12 @@ class CalculatorViewModelTest {
     }
 
     @Test
-    fun `Given user adds an operation, current number should be empty`() {
+    fun `Given user adds an operation, then expression should contain it`() {
         for (operation in Operation.values()) {
             viewModel.onEvent(UiEvent.TypeNumber((0..9).random()))
             viewModel.onEvent(UiEvent.AddOperation(operation))
             val expected = if (operation == Operation.SUBTRACTION) "-" else ""
-            assertThat(viewModel.currentNumber.value).isEqualTo(expected)
+            assertThat(viewModel.calculatorUiState.value.expression).contains(expected)
         }
     }
 
@@ -142,7 +142,7 @@ class CalculatorViewModelTest {
             }
             viewModel.onEvent(UiEvent.CalculateOperation)
 
-            assertThat(viewModel.result.value).isEqualTo(numbers.reduce(reduce))
+            assertThat(viewModel.calculatorUiState.value.result).isEqualTo(numbers.reduce(reduce))
         }
     }
 }

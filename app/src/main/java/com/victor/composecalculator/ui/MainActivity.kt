@@ -1,4 +1,4 @@
-package com.victor.composecalculator
+package com.victor.composecalculator.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

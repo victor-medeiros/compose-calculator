@@ -1,6 +1,6 @@
 package com.victor.composecalculator.model.extension
 
-import com.victor.composecalculator.CalculatorViewModel
+import com.victor.composecalculator.ui.CalculatorViewModel
 import com.victor.composecalculator.model.UiEvent
 
 fun CalculatorViewModel.addDecimal(
