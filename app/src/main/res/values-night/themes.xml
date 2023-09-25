@@ -2,6 +2,7 @@
 <resources>
 
     <style name="Theme.ComposeCalculator" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:statusBarColor">@color/gray_200</item>
+        <item name="android:statusBarColor">@color/gray_700</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 </resources>
