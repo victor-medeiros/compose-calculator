@@ -6,6 +6,7 @@ sealed class UiEvent {
     object AddDecimalCharacter: UiEvent()
     object CalculateOperation: UiEvent()
     object ClearExpression: UiEvent()
+    object DeleteCharacter: UiEvent()
 }
 
 enum class Operation(val symbol: String) {

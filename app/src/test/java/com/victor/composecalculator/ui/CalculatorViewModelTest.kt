@@ -4,6 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import com.victor.composecalculator.model.Operation
 import com.victor.composecalculator.model.UiEvent
 import com.victor.composecalculator.model.extension.addDecimal
+import com.victor.composecalculator.model.extension.addRandomCalculation
 import org.junit.Before
 import org.junit.Test
 
@@ -129,6 +130,53 @@ class CalculatorViewModelTest {
         viewModel.onEvent(UiEvent.TypeNumber((1..9).random()))
         viewModel.onEvent(UiEvent.AddOperation(Operation.values().random()))
         viewModel.onEvent(UiEvent.ClearExpression)
+        assertThat(viewModel.calculatorUiState.value).isEqualTo(CalculatorUiState())
+    }
+
+    @Test
+    fun `Given user adds a number after calculation, then expression and result should be cleaned`() {
+        viewModel.addRandomCalculation()
+
+        val num = (0..9).random()
+        viewModel.onEvent(UiEvent.TypeNumber(num))
+        assertThat(viewModel.calculatorUiState.value).isEqualTo(
+            CalculatorUiState(expression = num.toString())
+        )
+    }
+
+    @Test
+    fun `Given user adds an operation after calculation, then the previous result should be considered the first number`() {
+        viewModel.addRandomCalculation()
+        val result = viewModel.calculatorUiState.value.result
+        val operation = Operation.values().random()
+        val num = (0..9).random()
+        viewModel.onEvent(UiEvent.AddOperation(operation))
+        viewModel.onEvent(UiEvent.TypeNumber(num))
+
+        val expression = "$result${operation.symbol}$num"
+        assertThat(viewModel.calculatorUiState.value).isEqualTo(
+            CalculatorUiState(expression = expression)
+        )
+    }
+
+    @Test
+    fun `Given user adds operation after another operation, then the last should replace the previous`() {
+        val num = (1..9).random()
+        val operation = Operation.values().random()
+
+        viewModel.onEvent(UiEvent.TypeNumber(num))
+        viewModel.onEvent(UiEvent.AddOperation(Operation.values().random()))
+        viewModel.onEvent(UiEvent.AddOperation(operation))
+
+        val expression = "$num${operation.symbol}"
+        assertThat(viewModel.calculatorUiState.value).isEqualTo(
+            CalculatorUiState(expression = expression)
+        )
+    }
+
+    @Test
+    fun `Given user adds an operation without adding number, the event should be ignored`() {
+        viewModel.onEvent(UiEvent.AddOperation(Operation.values().random()))
         assertThat(viewModel.calculatorUiState.value).isEqualTo(CalculatorUiState())
     }
 
