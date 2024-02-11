@@ -41,8 +41,8 @@ fun CalculatorButton(
             .height(80.dp)
             .clip(CircleShape)
             .background(color)
-            .padding(16.dp)
-            .clickable { onPress() },
+            .clickable { onPress() }
+            .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
         val type = LocalContext.current.resources.getResourceTypeName(resource)
