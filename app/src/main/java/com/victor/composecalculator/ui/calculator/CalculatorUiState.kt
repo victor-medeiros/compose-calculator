@@ -1,4 +1,4 @@
-package com.victor.composecalculator.ui
+package com.victor.composecalculator.ui.calculator
 
 data class CalculatorUiState(
     val expression: String = "",

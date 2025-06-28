@@ -13,7 +13,8 @@ enum class Operation(val symbol: String) {
     SUM(symbol = "+"),
     SUBTRACTION(symbol = "-"),
     MULTIPLICATION(symbol = "*"),
-    DIVISION(symbol = "/");
+    DIVISION(symbol = "/"),
+    PERCENTAGE(symbol = "%");
 
     fun calculate(n1: Double, n2: Double): Double {
         return when (this) {
@@ -21,6 +22,7 @@ enum class Operation(val symbol: String) {
             SUBTRACTION -> n1 - n2
             MULTIPLICATION -> n1 * n2
             DIVISION -> n1 / n2
+            PERCENTAGE -> (n1 * n2) / 100
         }
     }
 }

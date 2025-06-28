@@ -16,11 +16,15 @@ val characters = listOf(
         event = UiEvent.ClearExpression
     ),
     CalculatorItem(
-        R.drawable.backspace,
+        R.string.percentage,
+        event = UiEvent.AddOperation(Operation.PERCENTAGE)
+    ),
+    CalculatorItem(
+        R.string.erase,
         event = UiEvent.DeleteCharacter
     ),
     CalculatorItem(
-        R.drawable.sum,
+        R.string.sum,
         event = UiEvent.AddOperation(Operation.SUM)
     ),
     CalculatorItem(
@@ -36,7 +40,7 @@ val characters = listOf(
         event = UiEvent.TypeNumber(7)
     ),
     CalculatorItem(
-        R.drawable.subtraction,
+        R.string.subtraction,
         event = UiEvent.AddOperation(Operation.SUBTRACTION)
     ),
     CalculatorItem(
@@ -52,7 +56,7 @@ val characters = listOf(
         event = UiEvent.TypeNumber(4)
     ),
     CalculatorItem(
-        R.drawable.multiplication,
+        R.string.multiplication,
         event = UiEvent.AddOperation(Operation.MULTIPLICATION)
     ),
     CalculatorItem(
@@ -68,7 +72,7 @@ val characters = listOf(
         event = UiEvent.TypeNumber(1)
     ),
     CalculatorItem(
-        R.drawable.division,
+        R.string.division,
         event = UiEvent.AddOperation(Operation.DIVISION)
     ),
     CalculatorItem(

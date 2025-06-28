@@ -1,4 +1,4 @@
-package com.victor.composecalculator.ui
+package com.victor.composecalculator.ui.calculator
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -78,7 +78,7 @@ class CalculatorViewModel : ViewModel() {
 
     private fun calculate() {
         var operation =
-            operations.find { it == Operation.MULTIPLICATION || it == Operation.DIVISION }
+            operations.find { it == Operation.MULTIPLICATION || it == Operation.DIVISION || it == Operation.PERCENTAGE }
         var priorityIndex = if (operation == null) -1 else operations.indexOf(operation)
 
         while (priorityIndex != -1) {
@@ -116,7 +116,7 @@ class CalculatorViewModel : ViewModel() {
 
             val expressionLastCharacter =
                 _calculatorUiState.value.expression.last().toString()
-            val operationFound = Operation.values().find { it.symbol == expressionLastCharacter }
+            val operationFound = Operation.entries.find { it.symbol == expressionLastCharacter }
             if (operationFound != null) {
                 _calculatorUiState.update { currentState ->
                     currentState.copy(

@@ -1,7 +1,7 @@
 package com.victor.composecalculator.model.extension
 
 import com.victor.composecalculator.model.Operation
-import com.victor.composecalculator.ui.CalculatorViewModel
+import com.victor.composecalculator.ui.calculator.CalculatorViewModel
 import com.victor.composecalculator.model.UiEvent
 
 fun CalculatorViewModel.addDecimal(
@@ -29,7 +29,7 @@ fun CalculatorViewModel.addDecimal(
 
 fun CalculatorViewModel.addRandomCalculation() {
     onEvent(UiEvent.TypeNumber((1..9).random()))
-    onEvent(UiEvent.AddOperation(Operation.values().random()))
+    onEvent(UiEvent.AddOperation(Operation.entries.toTypedArray().random()))
     onEvent(UiEvent.TypeNumber((0..9).random()))
     onEvent(UiEvent.CalculateOperation)
 }

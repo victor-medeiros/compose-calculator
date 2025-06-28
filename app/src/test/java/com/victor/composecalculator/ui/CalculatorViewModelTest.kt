@@ -5,6 +5,8 @@ import com.victor.composecalculator.model.Operation
 import com.victor.composecalculator.model.UiEvent
 import com.victor.composecalculator.model.extension.addDecimal
 import com.victor.composecalculator.model.extension.addRandomCalculation
+import com.victor.composecalculator.ui.calculator.CalculatorUiState
+import com.victor.composecalculator.ui.calculator.CalculatorViewModel
 import org.junit.Before
 import org.junit.Test
 
@@ -113,7 +115,7 @@ class CalculatorViewModelTest {
 
     @Test
     fun `Given user adds an operation, then expression should contain it`() {
-        for (operation in Operation.values()) {
+        for (operation in Operation.entries) {
             viewModel.onEvent(UiEvent.TypeNumber((0..9).random()))
             viewModel.onEvent(UiEvent.AddOperation(operation))
             val expected = if (operation == Operation.SUBTRACTION) "-" else ""
@@ -124,11 +126,11 @@ class CalculatorViewModelTest {
     @Test
     fun `Giver user onEvent receives ClearExpression, the all the state should be cleared and restarted`() {
         viewModel.onEvent(UiEvent.TypeNumber((1..9).random()))
-        viewModel.onEvent(UiEvent.AddOperation(Operation.values().random()))
+        viewModel.onEvent(UiEvent.AddOperation(Operation.entries.random()))
         viewModel.onEvent(UiEvent.TypeNumber((1..9).random()))
         viewModel.onEvent(UiEvent.CalculateOperation)
         viewModel.onEvent(UiEvent.TypeNumber((1..9).random()))
-        viewModel.onEvent(UiEvent.AddOperation(Operation.values().random()))
+        viewModel.onEvent(UiEvent.AddOperation(Operation.entries.random()))
         viewModel.onEvent(UiEvent.ClearExpression)
         assertThat(viewModel.calculatorUiState.value).isEqualTo(CalculatorUiState())
     }
@@ -148,7 +150,7 @@ class CalculatorViewModelTest {
     fun `Given user adds an operation after calculation, then the previous result should be considered the first number`() {
         viewModel.addRandomCalculation()
         val result = viewModel.calculatorUiState.value.result
-        val operation = Operation.values().random()
+        val operation = Operation.entries.random()
         val num = (0..9).random()
         viewModel.onEvent(UiEvent.AddOperation(operation))
         viewModel.onEvent(UiEvent.TypeNumber(num))
@@ -162,10 +164,10 @@ class CalculatorViewModelTest {
     @Test
     fun `Given user adds operation after another operation, then the last should replace the previous`() {
         val num = (1..9).random()
-        val operation = Operation.values().random()
+        val operation = Operation.entries.random()
 
         viewModel.onEvent(UiEvent.TypeNumber(num))
-        viewModel.onEvent(UiEvent.AddOperation(Operation.values().random()))
+        viewModel.onEvent(UiEvent.AddOperation(Operation.entries.random()))
         viewModel.onEvent(UiEvent.AddOperation(operation))
 
         val expression = "$num${operation.symbol}"
@@ -176,7 +178,7 @@ class CalculatorViewModelTest {
 
     @Test
     fun `Given user adds an operation without adding number, the event should be ignored`() {
-        viewModel.onEvent(UiEvent.AddOperation(Operation.values().random()))
+        viewModel.onEvent(UiEvent.AddOperation(Operation.entries.random()))
         assertThat(viewModel.calculatorUiState.value).isEqualTo(CalculatorUiState())
     }
 

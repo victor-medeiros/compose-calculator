@@ -10,6 +10,8 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.victor.composecalculator.ui.calculator.CalculatorScreen
+import com.victor.composecalculator.ui.calculator.CalculatorViewModel
 import com.victor.composecalculator.ui.theme.ComposeCalculatorTheme
 
 class MainActivity : ComponentActivity() {

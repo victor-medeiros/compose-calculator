@@ -13,4 +13,10 @@
     <string name="dot">.</string>
     <string name="equals">=</string>
     <string name="clear">C</string>
+    <string name="erase">⌫</string>
+    <string name="sum">+</string>
+    <string name="subtraction">-</string>
+    <string name="multiplication">×</string>
+    <string name="division">÷</string>
+    <string name="percentage">%</string>
 </resources>
